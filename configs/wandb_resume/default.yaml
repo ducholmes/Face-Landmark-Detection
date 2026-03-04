@@ -1,0 +1,3 @@
+run_path: "entity/project/run_id"
+checkpoint_name: "last.ckpt"
+download_dir: "checkpoints/resume"

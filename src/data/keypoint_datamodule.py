@@ -99,8 +99,8 @@ class KeypointDataModule(LightningDataModule):
             random.seed(42)
             random.shuffle(indices)
 
-            train_size = self.hparams.train_val_test_split[0]*total
-            val_size = self.hparams.train_val_test_split[1]*total
+            train_size = int(self.hparams.train_val_test_split[0]*total)
+            val_size = int(self.hparams.train_val_test_split[1]*total)
 
             train_indices = indices[:train_size]
             val_indices = indices[train_size:val_size+train_size]

@@ -36,7 +36,6 @@ class HRNetLandmarkModule(LightningModule):
     def __init__(
         self,
         num_landmarks: int = 76,
-        pretrained_path: Optional[str] = None,
         lr: float = 1e-3,
         weight_decay: float = 1e-4,
         loss: str = "wing",

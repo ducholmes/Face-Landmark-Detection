@@ -91,7 +91,7 @@ class KeypointDataModule(LightningDataModule):
             self.batch_size_per_device = self.hparams.batch_size // self.trainer.world_size
 
         if not self.data_train and not self.data_val and not self.data_test:
-            full_dataset = KeypointDataset(self.hparams.img_dir, self.hparams.keypoint_path)
+            full_dataset = KeypointDataset(self.img_dir, self.keypoint_path)
             total = len(full_dataset)
 
             indices = list(range(total))
@@ -108,16 +108,16 @@ class KeypointDataModule(LightningDataModule):
 
             if stage=='fit' or stage == None:
                 train_base = KeypointDataset(
-                    img_dir = self.hparams.img_dir,
-                    keypoint_path = self.hparams.keypoint_path,
+                    img_dir = self.img_dir,
+                    keypoint_path = self.keypoint_path,
                     transform=self.train_transform
                 )
 
                 self.data_train = Subset(train_base, train_indices)
 
                 val_base = KeypointDataset(
-                    img_dir = self.hparams.img_dir,
-                    keypoint_path = self.hparams.keypoint_path,
+                    img_dir = self.img_dir,
+                    keypoint_path = self.keypoint_path,
                     transform=self.test_transform
                 )
 
@@ -125,8 +125,8 @@ class KeypointDataModule(LightningDataModule):
 
             if stage=='test':
                 test_base = KeypointDataset(
-                    img_dir = self.hparams.img_dir,
-                    keypoint_path = self.hparams.keypoint_path,
+                    img_dir = self.img_dir,
+                    keypoint_path = self.keypoint_path,
                     transform=self.test_transform
                 )
 

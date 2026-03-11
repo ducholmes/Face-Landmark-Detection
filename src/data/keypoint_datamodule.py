@@ -109,7 +109,7 @@ class KeypointDataModule(LightningDataModule):
             if stage=='fit' or stage == None:
                 train_base = KeypointDataset(
                     img_dir = self.img_dir,
-                    keypoint_path = self.keypoint_path,
+                    csv_path = self.keypoint_path,
                     transform=self.train_transform
                 )
 
@@ -117,7 +117,7 @@ class KeypointDataModule(LightningDataModule):
 
                 val_base = KeypointDataset(
                     img_dir = self.img_dir,
-                    keypoint_path = self.keypoint_path,
+                    csv_path = self.keypoint_path,
                     transform=self.test_transform
                 )
 
@@ -126,7 +126,7 @@ class KeypointDataModule(LightningDataModule):
             if stage=='test':
                 test_base = KeypointDataset(
                     img_dir = self.img_dir,
-                    keypoint_path = self.keypoint_path,
+                    csv_path = self.keypoint_path,
                     transform=self.test_transform
                 )
 

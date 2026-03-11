@@ -23,7 +23,7 @@ class KeypointDataModule(LightningDataModule):
         self.save_hyperparameters(logger=False)
 
         self.img_dir = data_dir + "/jpg"
-        self.keypoint_path = data_dir + "/muct-landmarks"
+        self.keypoint_path = data_dir + "/muct-landmarks/muct76-opencv.csv"
 
         self.train_transform = A.Compose([
             A.LongestMaxSize(max_size=256),

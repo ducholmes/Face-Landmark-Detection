@@ -1,4 +1,4 @@
-__target__: src.models.hrnet_module.HRNetLandmarkModule
+_target_: src.models.hrnet_module.HRNetLandmarkModule
 
 pretrained_path: Null
 

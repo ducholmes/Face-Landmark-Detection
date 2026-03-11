@@ -33,7 +33,6 @@ class KeypointDataModule(LightningDataModule):
                 border_mode=0,
                 value=(0,0,0),
             ),
-            A.HorizontalFlip(p=0.5),
             A.Normalize(),
             A.ToTensorV2()
         ], keypoint_params=A.KeypointParams(format='xy', remove_invisible=False))

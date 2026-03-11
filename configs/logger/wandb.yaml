@@ -5,7 +5,7 @@ wandb:
   #resume: must
   save_dir: "${paths.output_dir}"
   offline: False
-  project: "MNIST-SOTA"
+  project: "Facial Landmark Detection"
   log_model: False
   entity: "ducholmes-vietnam-national-university-hanoi"
   group: ""

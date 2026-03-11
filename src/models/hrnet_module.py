@@ -44,6 +44,7 @@ class HRNetLandmarkModule(LightningModule):
         wing_epsilon: float = 2.0,
         nme_norm_factor: Optional[float] = None,
         freeze_backbone: int = 0,
+        compile: bool = False
     ):
         super().__init__()
         self.save_hyperparameters()

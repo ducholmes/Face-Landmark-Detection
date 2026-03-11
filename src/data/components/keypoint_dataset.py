@@ -32,7 +32,7 @@ class KeypointDataset(Dataset):
         keypoint = keypoint.iloc[2:].values.reshape(-1, 2).astype(np.float32)
 
         if self.transform:
-            transformed = self.transform(image=img, keypoint=keypoint)
+            transformed = self.transform(image=img, keypoints=keypoint)
 
             img = transformed['image']
             keypoint = np.array(transformed['keypoints'])

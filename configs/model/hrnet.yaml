@@ -1,0 +1,5 @@
+__target__: src.models.hrnet_module.HRNetLandmarkModule
+
+pretrained_path: Null
+
+compile: True

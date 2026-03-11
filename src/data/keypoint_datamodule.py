@@ -25,7 +25,7 @@ class KeypointDataModule(LightningDataModule):
         self.img_dir = data_dir + "/jpg"
         self.keypoint_path = data_dir + "/muct-landmarks"
 
-        self.train_transform = transforms.Compose([
+        self.train_transform = A.Compose([
             A.LongestMaxSize(max_size=256),
             A.PadIfNeeded(
                 min_height=256,
@@ -38,7 +38,7 @@ class KeypointDataModule(LightningDataModule):
             A.ToTensorV2()
         ], keypoint_params=A.KeypointParams(format='xy', remove_invisible=False))
 
-        self.test_transform = transforms.Compose([
+        self.test_transform = A.Compose([
             A.LongestMaxSize(max_size=256),
             A.PadIfNeeded(
                 min_height=256,

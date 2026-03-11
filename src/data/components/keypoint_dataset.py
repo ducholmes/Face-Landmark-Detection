@@ -21,7 +21,7 @@ class KeypointDataset(Dataset):
         self.num_keypoints = num_keypoints
 
     def __len__(self):
-        return len(self.keypoints)-2
+        return len(self.keypoints)
     
     def __getitem__(self, index):
         keypoint = self.keypoints.iloc[index]
@@ -39,8 +39,7 @@ class KeypointDataset(Dataset):
         keypoint[:, 0] = keypoint[:, 0] / 256.0
         keypoint[:, 1] = keypoint[:, 1] / 256.0
 
-        mask = ((keypoint[:, 0] == 0) & (keypoint[:, 1] == 0))
-        keypoint[mask] =  -1
+        mask = ((keypoint[:, 0] != 0) | (keypoint[:, 1] != 0))
 
         return {
             'image' : img,

@@ -4,7 +4,6 @@ defaults:
   - model_summary
   - rich_progress_bar
   - wandb_checkpoint
-  - ema
   - _self_
 
 model_checkpoint:

@@ -28,7 +28,7 @@ class KeypointDataset(Dataset):
         img_path = self.img_dir / (keypoint['name']+'.jpg')
         img = Image.open(img_path).convert('RGB')
 
-        keypoint = keypoint.iloc[:, 2:].values.reshape(-1, 2).astype(np.float32)
+        keypoint = keypoint.iloc[2:].values.reshape(-1, 2).astype(np.float32)
 
         if self.transform:
             transformed = self.transform(image=img, keypoint=keypoint)

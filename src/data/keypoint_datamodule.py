@@ -18,7 +18,7 @@ class KeypointDataModule(LightningDataModule):
         num_workers: int = 3,
         pin_memory: bool = False
     ) -> None:
-        super.__init__()
+        super().__init__()
 
         self.save_hyperparameters(logger=False)
 

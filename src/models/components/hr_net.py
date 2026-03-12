@@ -6,7 +6,7 @@ class HRNet(nn.Module):
         super().__init__()
 
         self.backbone=timm.create_model(
-            model_name='hrnet_w18',
+            model_name='hrnet_w48',
             pretrained=pretrained,
             num_classes = 0,
             global_pool = 'avg'

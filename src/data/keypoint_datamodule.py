@@ -92,19 +92,25 @@ class KeypointDataModule(LightningDataModule):
 
         if not self.data_train and not self.data_val and not self.data_test:
             full_dataset = KeypointDataset(self.img_dir, self.keypoint_path)
-            total = len(full_dataset)
-
-            indices = list(range(total))
+            df = full_dataset.keypoints
+            df['unique_subject'] = df['name'].str[:4]
+            unique_subjects = df['unique_subject'].unique().tolist()
 
             random.seed(42)
-            random.shuffle(indices)
+            random.shuffle(unique_subjects)
 
-            train_size = int(self.hparams.train_val_test_split[0]*total)
-            val_size = int(self.hparams.train_val_test_split[1]*total)
+            total_subjects = len(unique_subjects)
 
-            train_indices = indices[:train_size]
-            val_indices = indices[train_size:val_size+train_size]
-            test_indices = indices[val_size+train_size:]
+            train_size = int(self.hparams.train_val_test_split[0]*total_subjects)
+            val_size = int(self.hparams.train_val_test_split[1]*total_subjects)
+
+            train_subjects = set(unique_subjects[:train_size])
+            val_subjects = set(unique_subjects[train_size:val_size+train_size])
+            test_subjects = set(unique_subjects[val_size+train_size:])
+
+            train_indices = df.index[df['unique_subject'].isin(train_subjects)].tolist()
+            val_indices = df.index[df['unique_subject'].isin(val_subjects)].tolist()
+            test_indices = df.index[df['unique_subject'].isin(test_subjects)].tolist()
 
             if stage=='fit' or stage == None:
                 train_base = KeypointDataset(

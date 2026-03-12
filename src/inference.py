@@ -28,16 +28,16 @@ def predict_and_draw(image_path, checkpoint_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     checkpoint = torch.load(checkpoint_path)
-
     state_dict = checkpoint["state_dict"]
     new_state_dict = {}
     for k, v in state_dict.items():
         name = k.replace("_orig_mod.", "")
         new_state_dict[name] = v
     
-    model = HRNetLandmarkModule().load_state_dict(state_dict=new_state_dict)
-    model.eval()
+    model = HRNetLandmarkModule()
+    model.load_state_dict(new_state_dict)
     model.to(device)
+    model.eval()
     input_tensor = input_tensor.to(device)
 
     with torch.no_grad():

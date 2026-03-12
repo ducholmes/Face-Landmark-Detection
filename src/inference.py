@@ -50,7 +50,7 @@ def predict_and_draw(image_path, checkpoint_path):
     
     plt.title(f"Face Landmark Detection - {image_path.split('/')[-1]}")
     plt.axis('off')
-    plt.show()
+    plt.savefig('images/VHD_plot.png')
 
 TEST_IMAGE_PATH = "images/VHD.png" 
 CKPT_PATH = "logs/train/last.ckpt"

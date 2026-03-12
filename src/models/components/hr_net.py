@@ -25,4 +25,6 @@ class HRNet(nn.Module):
         raw_coords = self.head(features)
         rel_coords = self.sigmoid(raw_coords)
 
+        rel_coords = rel_coords.view(rel_coords.size(0), -1, 2)
+
         return rel_coords

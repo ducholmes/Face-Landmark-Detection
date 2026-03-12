@@ -23,8 +23,6 @@ class WingLoss(nn.Module):
             diff - C,
         )
         
-        loss_per_coord = loss_per_coord.view(-1, 2)
-
         if mask is None:
             return loss_per_coord.sum(dim=-1).mean()
 

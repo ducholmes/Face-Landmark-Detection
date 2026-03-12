@@ -43,9 +43,9 @@ def predict_and_draw(image_path, checkpoint_path):
     landmarks = outputs.cpu().numpy().squeeze() 
     landmarks = landmarks * 256 
     
-    plt.figure(figsize=(2.56, 2.56), dpi=100)
+    plt.figure(figsize=(100, 100))
     plt.imshow(display_image)
-    plt.scatter(landmarks[:, 0], landmarks[:, 1], s=20, c='hotpink', edgecolors='white', marker='o')
+    plt.scatter(landmarks[:, 0], landmarks[:, 1], s=5, c='hotpink', edgecolors='white', marker='o')
     
     plt.title(f"Face Landmark Detection - {image_path.split('/')[-1]}")
     plt.axis('on')

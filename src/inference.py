@@ -9,11 +9,6 @@ import wandb
 from models.components.hr_net import HRNet
 from models.hrnet_module import HRNetLandmarkModule
 
-# api = wandb.Api()
-# artifact = api.artifact("ducholmes-vietnam-national-university-hanoi/Facial Landmark Detection/7j1k2oqg")
-# save_dir = "logs/train"
-# artifact_dir = artifact.download(root=save_dir)
-
 def predict_and_draw(image_path, checkpoint_path):
     image = np.array(Image.open(image_path).convert("RGB"))
     
@@ -32,7 +27,7 @@ def predict_and_draw(image_path, checkpoint_path):
     input_tensor = transform(image=image)["image"].unsqueeze(0)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    model = HRNetLandmarkModule().load_from_checkpoint(checkpoint_path)
+    model = HRNetLandmarkModule.load_from_checkpoint(checkpoint_path)
     model.eval()
     model.to(device)
     input_tensor = input_tensor.to(device)

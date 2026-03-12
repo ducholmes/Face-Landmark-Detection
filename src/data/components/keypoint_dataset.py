@@ -15,7 +15,7 @@ class KeypointDataset(Dataset):
         num_keypoints = 76
     ):
         self.img_dir = Path(img_dir)
-        self.keypoints = pd.read_csv(csv_path)
+        self.keypoints = pd.read_csv(csv_path).iloc[:3755]
         self.transform = transform
         self.width, self.height = img_size
         self.num_keypoints = num_keypoints

@@ -26,7 +26,7 @@ def predict_and_draw(image_path, checkpoint_path):
     ])
 
     input_tensor = preprocess(image=image_np)["image"].unsqueeze(0).to(device)
-    display_image = vis_transform(image=image_np)["image"] # Ảnh dùng để vẽ landmark
+    display_image = vis_transform(image=image_np)["image"]
     
     checkpoint = torch.load(checkpoint_path, map_location=device)
     state_dict = checkpoint["state_dict"]
@@ -38,18 +38,17 @@ def predict_and_draw(image_path, checkpoint_path):
     model.eval()
 
     with torch.no_grad():
-        outputs = model(input_tensor) # Output shape: [1, 76, 2]
+        outputs = model(input_tensor)
         
-    landmarks = outputs.cpu().numpy().squeeze() # [76, 2]
-    landmarks = landmarks * 256 # Quan trọng: Phải nhân với size ảnh resize
+    landmarks = outputs.cpu().numpy().squeeze() 
+    landmarks = landmarks * 256 
     
-    # 6. Vẽ kết quả
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(2.56, 2.56), dpi=100)
     plt.imshow(display_image)
     plt.scatter(landmarks[:, 0], landmarks[:, 1], s=20, c='hotpink', edgecolors='white', marker='o')
     
     plt.title(f"Face Landmark Detection - {image_path.split('/')[-1]}")
-    plt.axis('off')
+    plt.axis('on')
     plt.savefig('images/VHD_plot.png')
 
 TEST_IMAGE_PATH = "images/VHD.png" 

@@ -8,7 +8,7 @@ from torchmetrics import MeanMetric, MinMetric
 from models.components.hr_net import HRNet
 
 class WingLoss(nn.Module):
-    def __init__(self, w: float = 10.0, epsilon: float = 2.0):
+    def __init__(self, w: float =0.039, epsilon: float = 0.0078):
         super().__init__()
         self.w = w
         self.epsilon = epsilon

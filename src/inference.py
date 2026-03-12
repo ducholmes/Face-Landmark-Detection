@@ -27,13 +27,13 @@ def predict_and_draw(image_path, checkpoint_path):
     input_tensor = transform(image=image)["image"].unsqueeze(0)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    if 'state_dict' in checkpoint_path:
-        checkpoint_path["state_dict"] = {
-                    k.replace("_orig_mod.", ""): v
-                    for k, v in checkpoint_path["state_dict"].items()
-                }
+    state_dict = checkpoint_path["state_dict"]
+    new_state_dict = {}
+    for k, v in state_dict.items():
+        name = k.replace("_orig_mod.", "")
+        new_state_dict[name] = v
     
-    model = HRNetLandmarkModule.load_from_checkpoint(checkpoint_path)
+    model = HRNetLandmarkModule.load_state_dict(checkpoint_path)
     model.eval()
     model.to(device)
     input_tensor = input_tensor.to(device)

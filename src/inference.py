@@ -27,7 +27,9 @@ def predict_and_draw(image_path, checkpoint_path):
     input_tensor = transform(image=image)["image"].unsqueeze(0)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    state_dict = checkpoint_path["state_dict"]
+    checkpoint = torch.load(checkpoint_path)
+
+    state_dict = checkpoint["state_dict"]
     new_state_dict = {}
     for k, v in state_dict.items():
         name = k.replace("_orig_mod.", "")

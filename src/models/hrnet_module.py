@@ -31,7 +31,7 @@ class WingLoss(nn.Module):
         visible = mask.float()
         n_visible = visible.sum().clamp(min=1.0)
 
-        return (loss_per_coord*visible).sum() / n_visible
+        return (loss_per_coord.sum(dim=-1)*visible).sum() / n_visible
     
 class HRNetLandmarkModule(LightningModule):
 

@@ -79,7 +79,7 @@ class HRNetLandmarkModule(LightningModule):
         visible = mask.float()
         n_visible = visible.sum(dim=-1).clamp(min=1.0)
 
-        nme = (dist*visible).sum(sim=-1) / n_visible / self.norm_factor
+        nme = (dist*visible).sum(dim=-1) / n_visible / self.norm_factor
 
         return nme
     

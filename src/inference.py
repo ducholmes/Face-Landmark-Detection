@@ -45,7 +45,7 @@ def predict_and_draw(image_path, checkpoint_path):
         
     landmarks = outputs.cpu().numpy().squeeze()
     landmarks = landmarks.reshape(-1, 2)
-    transformed_image = transform(input_tensor)
+    transformed_image = transform(image=input_tensor)
     
     plt.figure(figsize=(8, 8))
     plt.imshow(transformed_image)

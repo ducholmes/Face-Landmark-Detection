@@ -42,8 +42,9 @@ def predict_and_draw(image_path, checkpoint_path):
 
     with torch.no_grad():
         outputs = model(input_tensor)
+        landmarks_norm, _  = model.decode_heatmaps(outputs)
         
-    landmarks, _  = decode_heatmaps(outputs.cpu().numpy().squeeze())
+    landmarks = landmarks_norm[0].cpu().numpy()
     landmarks = landmarks * 256 
     
     plt.imshow(display_image)

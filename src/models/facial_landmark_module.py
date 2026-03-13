@@ -96,7 +96,7 @@ class FacialLandmarkModule(LightningModule):
 
 
     def model_step(self, batch: Any) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        images, heatmaps, landmarks, mask = batch['image'], batch['heatmap'], batch['keypoint'], batch['mask']
+        images, heatmaps, landmarks, mask = batch['image'], batch['heatmap'], batch['keypoint_rel'], batch['mask']
 
         if landmarks.dim() == 2:
             landmarks = landmarks.view(-1, self.hparams.num_landmarks, 2)  

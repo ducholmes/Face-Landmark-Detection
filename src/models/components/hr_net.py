@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import timm
 
-class HRNet(nn.Module):
+class HRNetLandmarks(nn.Module):
     def __init__(self, num_landmarks=76, pretrained=True):
         super().__init__()
 
@@ -20,30 +20,25 @@ class HRNet(nn.Module):
             kernel_size=1
         )
 
-    def forward(self, x):        
-        x = self.backbone.conv1(x)
-        x = self.backbone.bn1(x)
-        x = self.backbone.act1(x)
-        x = self.backbone.conv2(x)
-        x = self.backbone.bn2(x)
-        x = self.backbone.act2(x)
-        x = self.backbone.layer1(x)
-        
-        x = [x]
-        
-        x = self.backbone.stage2(x)
-        x = self.backbone.stage3(x)
-        x = self.backbone.stage4(x)
-        
-        high_res_features = x[0]
-        
-        heatmap = self.head(high_res_features)
+    def forward(self, x):
+        high_res_features = []
+
+        def hook(module, input, output):
+            high_res_features.append(output[0])
+
+        handle = self.backbone.stage4.register_forward_hook(hook)
+
+        _ = self.backbone(x)
+
+        handle.remove()
+
+        heatmap = self.head(high_res_features[0])
 
         return heatmap
 
-    def decode_heatmaps(heatmaps):
+    @staticmethod
+    def decode_heatmaps(heatmaps, stride=4):
         B, C, H, W = heatmaps.shape
-        
         heatmaps_reshaped = heatmaps.reshape(B, C, -1)
         
         maxvals, idx = torch.max(heatmaps_reshaped, dim=2)
@@ -52,7 +47,6 @@ class HRNet(nn.Module):
         preds_x = (idx % W).float()
         preds_y = (idx // W).float()
         
-
         for b in range(B):
             for c in range(C):
                 hm = heatmaps[b, c]
@@ -66,7 +60,8 @@ class HRNet(nn.Module):
                     preds_x[b, c] += torch.sign(diff_x) * 0.25
                     preds_y[b, c] += torch.sign(diff_y) * 0.25
 
+        preds_x = preds_x / W
+        preds_y = preds_y / H
         preds = torch.stack([preds_x, preds_y], dim=-1)
-        preds = preds / W
         
         return preds, maxvals

@@ -71,7 +71,7 @@ class FacialLandmarkModule(LightningModule):
         self.val_nme_best = MinMetric()
 
     def _compute_nme(self, pred_heatmap: torch.Tensor, target_landmark: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
-        pred = self.decode_heatmaps(pred_heatmap)
+        pred, _ = self.decode_heatmaps(pred_heatmap)
 
         dist = torch.norm(pred - target_landmark, dim=-1)  
 

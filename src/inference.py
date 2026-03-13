@@ -43,7 +43,7 @@ def predict_and_draw(image_path, checkpoint_path):
     with torch.no_grad():
         outputs = model(input_tensor)
         
-    landmarks = outputs.cpu().numpy().squeeze() 
+    landmarks, _  = decode_heatmaps(outputs.cpu().numpy().squeeze())
     landmarks = landmarks * 256 
     
     plt.imshow(display_image)
@@ -55,6 +55,36 @@ def predict_and_draw(image_path, checkpoint_path):
 
 TEST_IMAGE_PATH = "images/VHD.png" 
 CKPT_PATH = "logs/train/last.ckpt"
+
+def decode_heatmaps(self, heatmaps):
+        B, C, H, W = heatmaps.shape
+        
+        heatmaps_reshaped = heatmaps.reshape(B, C, -1)
+        
+        maxvals, idx = torch.max(heatmaps_reshaped, dim=2)
+        maxvals = maxvals.unsqueeze(-1)
+        
+        preds_x = (idx % W).float()
+        preds_y = (idx // W).float()
+        
+
+        for b in range(B):
+            for c in range(C):
+                hm = heatmaps[b, c]
+                px = int(preds_x[b, c].item())
+                py = int(preds_y[b, c].item())
+                
+                if 0 < px < W - 1 and 0 < py < H - 1:
+                    diff_x = hm[py, px + 1] - hm[py, px - 1]
+                    diff_y = hm[py + 1, px] - hm[py - 1, px]
+                    
+                    preds_x[b, c] += torch.sign(diff_x) * 0.25
+                    preds_y[b, c] += torch.sign(diff_y) * 0.25
+
+        preds = torch.stack([preds_x, preds_y], dim=-1)
+        preds = preds / W
+        
+        return preds, maxvals
 
 if __name__ == "__main__":
     predict_and_draw(TEST_IMAGE_PATH, CKPT_PATH)

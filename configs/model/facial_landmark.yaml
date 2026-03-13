@@ -1,7 +1,7 @@
 _target_: src.models.facial_landmark_module.FacialLandmarkModule
 
 net:
- _target_: src.models.components.hr_net.HRNet
+ _target_: src.models.components.hr_net.HRNetLandmarks
 
 loss: mse
 

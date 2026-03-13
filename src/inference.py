@@ -8,6 +8,8 @@ from albumentations.pytorch import ToTensorV2
 from models.facial_landmark_module import FacialLandmarkModule
 from models.components.hr_net import HRNetLandmarks
 
+torch.serialization.add_safe_globals([HRNetLandmarks])
+
 def predict_and_draw(image_path, checkpoint_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     

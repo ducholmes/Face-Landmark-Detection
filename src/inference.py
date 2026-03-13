@@ -5,8 +5,8 @@ from PIL import Image
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
-from models.facial_landmark_module import FacialLandmarkModule
-from models.components.hr_net import HRNetLandmarks
+from src.models.facial_landmark_module import FacialLandmarkModule
+from src.models.components.hr_net import HRNetLandmarks
 
 torch.serialization.add_safe_globals([HRNetLandmarks])
 

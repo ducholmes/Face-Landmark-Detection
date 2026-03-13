@@ -3,27 +3,41 @@ import torch.nn as nn
 import timm
 
 class HRNet(nn.Module):
-    def __init__(self, num_landmarks=76, pretrained=True, freeze_backbone=True):
+    def __init__(self, num_landmarks=76, pretrained=True):
         super().__init__()
 
-        self.backbone=timm.create_model(
+        self.backbone = timm.create_model(
             model_name='hrnet_w18',
             pretrained=pretrained,
-            features_only=True,
-            out_indices=(0,)
+            num_classes=0 
         )
 
-        # if freeze_backbone:
-        #     for param in self.backbone.parameters():
-        #         param.requires_grad = False
+        in_channels = 18 
+        
+        self.head = nn.Conv2d(
+            in_channels=in_channels, 
+            out_channels=num_landmarks,
+            kernel_size=1
+        )
 
-        in_channels = self.backbone.feature_info.channels()[0]
-        self.head = nn.Conv2d(kernel_size=1, in_channels=in_channels, out_channels=num_landmarks)
-
-    def forward(self, x):
-        features = self.backbone(x)[0]
-
-        heatmap = self.head(features)
+    def forward(self, x):        
+        x = self.backbone.conv1(x)
+        x = self.backbone.bn1(x)
+        x = self.backbone.act1(x)
+        x = self.backbone.conv2(x)
+        x = self.backbone.bn2(x)
+        x = self.backbone.act2(x)
+        x = self.backbone.layer1(x)
+        
+        x = [x]
+        
+        x = self.backbone.stage2(x)
+        x = self.backbone.stage3(x)
+        x = self.backbone.stage4(x)
+        
+        high_res_features = x[0]
+        
+        heatmap = self.head(high_res_features)
 
         return heatmap
 

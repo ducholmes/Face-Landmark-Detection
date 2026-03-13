@@ -13,7 +13,7 @@ class KeypointDataModule(LightningDataModule):
     def __init__(
         self,
         data_dir: str = '/data',
-        train_val_test_split: Tuple[int, int, int]=[0.8, 0.1, 0.1],
+        train_val_test_split: Tuple[int, int, int]=[0.8, 0.2, 0],
         batch_size: int = 64,
         num_workers: int = 3,
         pin_memory: bool = False

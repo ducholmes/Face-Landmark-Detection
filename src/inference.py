@@ -31,7 +31,7 @@ def predict_and_draw(image_path, checkpoint_path):
     input_tensor = preprocess(image=image_np)["image"].unsqueeze(0).to(device)
     display_image = vis_transform(image=image_np)["image"]
     
-    checkpoint = torch.load(checkpoint_path, map_location=device)
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
     state_dict = checkpoint["state_dict"]
     new_state_dict = {k.replace("_orig_mod.", ""): v for k, v in state_dict.items()}
     

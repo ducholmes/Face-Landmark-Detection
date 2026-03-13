@@ -54,7 +54,7 @@ def predict_and_draw(image_path, checkpoint_path):
     plt.axis('on')
     plt.savefig('images/Nigga_plot.png')
 
-TEST_IMAGE_PATH = "images/Nigga.png" 
+TEST_IMAGE_PATH = "images/Nigga.jpg" 
 CKPT_PATH = "logs/train/last.ckpt"
 
 def decode_heatmaps(self, heatmaps):

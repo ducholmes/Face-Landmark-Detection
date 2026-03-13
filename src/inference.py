@@ -6,6 +6,7 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
 from models.facial_landmark_module import FacialLandmarkModule
+from models.components.hr_net import HRNetLandmarks
 
 def predict_and_draw(image_path, checkpoint_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -32,7 +33,7 @@ def predict_and_draw(image_path, checkpoint_path):
     state_dict = checkpoint["state_dict"]
     new_state_dict = {k.replace("_orig_mod.", ""): v for k, v in state_dict.items()}
     
-    model = FacialLandmarkModule()
+    model = FacialLandmarkModule(HRNetLandmarks())
     model.load_state_dict(new_state_dict)
     model.to(device)
     model.eval()

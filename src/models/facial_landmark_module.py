@@ -31,14 +31,15 @@ class WingLoss(nn.Module):
 
         return (loss_per_coord.sum(dim=-1)*visible).sum() / n_visible
     
-class HRNetLandmarkModule(LightningModule):
+class FacialLandmarkModule(LightningModule):
 
     def __init__(
         self,
+        net,
         num_landmarks: int = 76,
         lr: float = 1e-3,
         weight_decay: float = 1e-4,
-        loss: str = "wing",
+        loss: str = "mse",
         wing_w: float = 10.0,
         wing_epsilon: float = 2.0,
         nme_norm_factor: Optional[float] = None,
@@ -48,7 +49,7 @@ class HRNetLandmarkModule(LightningModule):
         super().__init__()
         self.save_hyperparameters()
 
-        self.net = HRNet()
+        self.net = net
 
         if loss == "wing":
             self.criterion = WingLoss(w=wing_w, epsilon=wing_epsilon)
@@ -69,8 +70,10 @@ class HRNetLandmarkModule(LightningModule):
 
         self.val_nme_best = MinMetric()
 
-    def _compute_nme(self, pred: torch.Tensor, target: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
-        dist = torch.norm(pred - target, dim=-1)  
+    def _compute_nme(self, pred_heatmap: torch.Tensor, target_landmark: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+        pred = self.decode_heatmaps(pred_heatmap)
+
+        dist = torch.norm(pred - target_landmark, dim=-1)  
 
         if mask is None:
             nme = dist.mean(dim=-1) / self.norm_factor
@@ -88,21 +91,12 @@ class HRNetLandmarkModule(LightningModule):
         self.val_nme.reset()
         self.val_nme_best.reset()
 
-    # def _freeze_backbone(self, freeze: bool):
-    #     for p in self.net.backbone.parameters():
-    #         p.requires_grad = not freeze
-
-    # def on_train_epoch_start(self) -> None:
-    #     if self.hparams.freeze_backbone > 0:
-    #         freeze = self.current_epoch < self.hparams.freeze_backbone
-    #         self._freeze_backbone(freeze)
-
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.net(x)
 
 
     def model_step(self, batch: Any) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        images, landmarks, mask = batch['image'], batch['keypoint'], batch['mask']
+        images, heatmaps, landmarks, mask = batch['image'], batch['heatmap'], batch['keypoint'], batch['mask']
 
         if landmarks.dim() == 2:
             landmarks = landmarks.view(-1, self.hparams.num_landmarks, 2)  
@@ -110,8 +104,8 @@ class HRNetLandmarkModule(LightningModule):
             mask = mask.view(-1, self.hparams.num_landmarks)
 
         pred = self.net(images)
-        loss = self.criterion(pred, landmarks, mask)
-        nme  = self._compute_nme(pred, landmarks, mask)
+        loss = self.criterion(pred, heatmaps)
+        nme  = self._compute_nme(pred, heatmaps, mask)
         return loss, nme, pred
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
@@ -182,3 +176,33 @@ class HRNetLandmarkModule(LightningModule):
                 "frequency": 1
             },
         }
+    
+    def decode_heatmaps(self, heatmaps):
+        B, C, H, W = heatmaps.shape
+        
+        heatmaps_reshaped = heatmaps.reshape(B, C, -1)
+        
+        maxvals, idx = torch.max(heatmaps_reshaped, dim=2)
+        maxvals = maxvals.unsqueeze(-1)
+        
+        preds_x = (idx % W).float()
+        preds_y = (idx // W).float()
+        
+
+        for b in range(B):
+            for c in range(C):
+                hm = heatmaps[b, c]
+                px = int(preds_x[b, c].item())
+                py = int(preds_y[b, c].item())
+                
+                if 0 < px < W - 1 and 0 < py < H - 1:
+                    diff_x = hm[py, px + 1] - hm[py, px - 1]
+                    diff_y = hm[py + 1, px] - hm[py - 1, px]
+                    
+                    preds_x[b, c] += torch.sign(diff_x) * 0.25
+                    preds_y[b, c] += torch.sign(diff_y) * 0.25
+
+        preds = torch.stack([preds_x, preds_y], dim=-1)
+        preds = preds / W
+        
+        return preds, maxvals

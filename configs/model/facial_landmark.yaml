@@ -1,0 +1,10 @@
+_target_: src.models.facial_landmark_module.FacialLandmarkModule
+
+net:
+ _target_: src.model.components.hr_net.HRNet
+
+loss: mse
+
+nme_norm_factor: (64**2 + 64**2)**0.5
+
+compile: True

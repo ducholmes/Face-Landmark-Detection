@@ -18,7 +18,7 @@ class HRNet(nn.Module):
         #         param.requires_grad = False
 
         in_channels = self.backbone.feature_info.channels()[0]
-        self.head = nn.Conv2d(kernel_size=1, in_channels=in_features, out_channels=num_landmarks)
+        self.head = nn.Conv2d(kernel_size=1, in_channels=in_channels, out_channels=num_landmarks)
 
     def forward(self, x):
         features = self.backbone(x)[0]

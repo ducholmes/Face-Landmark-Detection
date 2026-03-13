@@ -7,6 +7,3 @@ accelerator: gpu
 devices: 2
 num_nodes: 1
 sync_batchnorm: True
-strategy:
-  _target_: lightning.pytorch.strategies.DDPStrategy
-  find_unused_parameters: True

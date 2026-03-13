@@ -5,6 +5,6 @@ net:
 
 loss: mse
 
-nme_norm_factor: (64**2 + 64**2)**0.5
+nme_norm_factor: 90.509668
 
 compile: True

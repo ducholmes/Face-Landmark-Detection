@@ -105,7 +105,7 @@ class FacialLandmarkModule(LightningModule):
 
         pred = self.net(images)
         loss = self.criterion(pred, heatmaps)
-        nme  = self._compute_nme(pred, heatmaps, mask)
+        nme  = self._compute_nme(pred, landmarks, mask)
         return loss, nme, pred
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:

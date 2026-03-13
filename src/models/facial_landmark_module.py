@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torchmetrics import MeanMetric, MinMetric
 
-from models.components.hr_net import HRNet
+from models.components.hr_net import HRNetLandmarks
 
 class WingLoss(nn.Module):
     def __init__(self, w: float =0.039, epsilon: float = 0.0078):

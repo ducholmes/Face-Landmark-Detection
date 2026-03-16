@@ -52,9 +52,9 @@ def predict_and_draw(image_path, checkpoint_path):
     
     plt.title(f"Face Landmark Detection - {image_path.split('/')[-1]}")
     plt.axis('on')
-    plt.savefig('images/Nigga_plot.png')
+    plt.savefig('images/Niggaa_plot.png')
 
-TEST_IMAGE_PATH = "images/Nigga.jpg" 
+TEST_IMAGE_PATH = "images/Niggaa.jpg" 
 CKPT_PATH = "logs/train/last.ckpt"
 
 def decode_heatmaps(self, heatmaps):

@@ -22,7 +22,7 @@ class WFLWDataModule(LightningDataModule):
 
         self.save_hyperparameters(logger=False)
 
-        self.img_dir = data_dir + "/WFLW_images/WFLW_images"
+        self.img_dir = data_dir + "/WFLW_images/WFLW_images/"
         self.train_keypoint_path = data_dir + "/WFLW_annotations/WFLW_annotations/list_98pt_rect_attr_train_test/list_98pt_rect_attr_train.txt"
         self.test_keypoint_path = data_dir + "/WFLW_annotations/WFLW_annotations/list_98pt_rect_attr_train_test/list_98pt_rect_attr_test.txt"
 

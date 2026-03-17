@@ -22,7 +22,7 @@ class WFLWDataset(Dataset):
         self.landmarks = []
 
         with open(landmark_path, 'r') as f:
-            lines = f.readline()
+            lines = f.readlines()
 
             for line in lines:
                 parts = line.strip().split()

@@ -26,8 +26,7 @@ class WFLWDataset(Dataset):
 
             for line in lines:
                 parts = line.strip().split()
-                print(parts)
-
+                
                 landmark = np.array(parts[0:196], dtype=np.float32).reshape(-1, 2)
                 landmark_name = parts[-1]
 

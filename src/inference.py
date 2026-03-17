@@ -35,7 +35,7 @@ def predict_and_draw(image_path, checkpoint_path):
     state_dict = checkpoint["state_dict"]
     new_state_dict = {k.replace("_orig_mod.", ""): v for k, v in state_dict.items()}
     
-    model = FacialLandmarkModule(HRNetLandmarks())
+    model = FacialLandmarkModule(HRNetLandmarks(num_landmarks=98))
     model.load_state_dict(new_state_dict)
     model.to(device)
     model.eval()

@@ -19,7 +19,7 @@ class WFLWDataset(Dataset):
     ):
         self.img_dir = Path(img_dir)
 
-        self.landmarks = np.array([])
+        self.landmarks = []
 
         with open(landmark_path, 'r') as f:
             lines = f.readline()
@@ -27,7 +27,7 @@ class WFLWDataset(Dataset):
             for line in lines:
                 parts = line.strip().split()
 
-                landmark = np.array(parts[0:196], dtype=np.float32)
+                landmark = np.array(parts[0:196], dtype=np.float32).reshape(-1, 2)
                 print(landmark)
                 landmark_name = parts[-1]
 

@@ -2,7 +2,7 @@ _target_: src.models.facial_landmark_module.FacialLandmarkModule
 
 net:
   _target_: src.models.components.hr_net.HRNetLandmarks
-  - num_landmarks: 98
+  num_landmarks: 98
 
 loss: smooth_l1
 

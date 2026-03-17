@@ -121,4 +121,4 @@ class WFLWDataModule(LightningDataModule):
                 self.data_test = test_base
 
 if __name__ == "__main__":
-    _ = KeypointDataModule()
+    _ = WFLWDataModule()

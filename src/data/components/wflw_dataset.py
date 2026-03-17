@@ -26,7 +26,7 @@ class WFLWDataset(Dataset):
 
             for line in lines:
                 parts = line.strip().split()
-                
+
                 landmark = np.array(parts[0:196], dtype=np.float32).reshape(-1, 2)
                 landmark_name = parts[-1]
 
@@ -73,7 +73,7 @@ class WFLWDataset(Dataset):
         img = Image.open(img_path)
 
         if self.transform:
-            transformed = self.transform(img, landmark)
+            transformed = self.transform(image=img, keypoints=landmark)
 
             img = transformed['image']
             landmark = np.array(transformed['keypoints'])

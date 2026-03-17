@@ -1,10 +1,13 @@
 _target_: src.models.facial_landmark_module.FacialLandmarkModule
 
 net:
- _target_: src.models.components.hr_net.HRNetLandmarks
+  _target_: src.models.components.hr_net.HRNetLandmarks
+  - num_landmarks: 98
 
-loss: mse
+loss: smooth_l1
 
 nme_norm_factor: 90.509668
 
 compile: True
+
+num_landmarks: 98

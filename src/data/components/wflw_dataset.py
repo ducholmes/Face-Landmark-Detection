@@ -71,6 +71,7 @@ class WFLWDataset(Dataset):
         img_path = os.path.join(self.img_dir, landmark_name)
 
         img = Image.open(img_path)
+        img = np.array(img)
 
         if self.transform:
             transformed = self.transform(image=img, keypoints=landmark)

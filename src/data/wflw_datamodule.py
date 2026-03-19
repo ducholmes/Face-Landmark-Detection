@@ -27,26 +27,29 @@ class WFLWDataModule(LightningDataModule):
         self.test_keypoint_path = data_dir + "/WFLW_annotations/WFLW_annotations/list_98pt_rect_attr_train_test/list_98pt_rect_attr_test.txt"
 
         self.train_transform = A.Compose([
-            A.LongestMaxSize(max_size=256),
-            A.PadIfNeeded(
-                min_height=256,
-                min_width=256,
+            A.Resize(height=256, width=256), 
+            
+            A.ShiftScaleRotate(
+                shift_limit=0.05, 
+                scale_limit=0.1,
+                rotate_limit=30,
                 border_mode=0,
-                value=(0,0,0),
+                value=(0, 0, 0),
+                p=0.5
             ),
-            A.Normalize(),
+            
+            A.RandomBrightnessContrast(p=0.2),
+            
+            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            
             A.ToTensorV2()
         ], keypoint_params=A.KeypointParams(format='xy', remove_invisible=False))
 
         self.test_transform = A.Compose([
-            A.LongestMaxSize(max_size=256),
-            A.PadIfNeeded(
-                min_height=256,
-                min_width=256,
-                border_mode=0,
-                value=(0,0,0),
-            ),
-            A.Normalize(),
+            A.Resize(height=256, width=256), 
+            
+            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            
             A.ToTensorV2()
         ], keypoint_params=A.KeypointParams(format='xy', remove_invisible=False))
 

@@ -4,7 +4,7 @@ net:
   _target_: src.models.components.hr_net.HRNetLandmarks
   num_landmarks: 98
 
-loss: smooth_l1
+loss: wing
 
 nme_norm_factor: 90.509668
 

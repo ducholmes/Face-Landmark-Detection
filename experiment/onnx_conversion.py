@@ -17,18 +17,19 @@ model = FacialLandmarkModule(HRNetLandmarks(num_landmarks=98))
 #     root="./logs/train"
 # )
 
-checkpoint_path = './logs/train/last.ckpt'
+checkpoint_path = './logs/train/HR18-WFLW.pth'
 
 checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
-state_dict = checkpoint["state_dict"]
-new_state_dict = {k.replace("_orig_mod.", ""): v for k, v in state_dict.items()}
+state_dict = checkpoint
+new_state_dict = state_dict
+# new_state_dict = {k.replace("_orig_mod.", ""): v for k, v in state_dict.items()}
 
 model.load_state_dict(new_state_dict)
 model.eval()
 
 dummy_input = torch.randn(1, 3, 256, 256)
 
-onnx_file_path = "hrnet_w18.onnx"
+onnx_file_path = "./experiment/hrnet_w18.onnx"
 torch.onnx.export(
     model, 
     dummy_input, 

@@ -20,7 +20,7 @@ class HRNetLandmarks(nn.Module):
         bottleneck_channels = 256 
 
         self.head = nn.Sequential(
-            nn.Conv2d(total_channels, bottleneck_channels, kernel_size=1, bias=False),
+            nn.Conv2d(in_channels, bottleneck_channels, kernel_size=1, bias=False),
             nn.BatchNorm2d(bottleneck_channels),
             nn.ReLU(inplace=True),
             

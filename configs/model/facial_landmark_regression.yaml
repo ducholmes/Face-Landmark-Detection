@@ -1,7 +1,7 @@
-_target_: src.models.facial_landmark_regression_module.FacialLandmarkModule
+_target_: src.models.facial_landmark_regression_module.FacialLandmarkRegressionModule
 
 net:
-  _target_: src.models.components.resnet.FacialLandmarkRegressionModule
+  _target_: src.models.components.resnet.FaceLandmarkResNet
   num_landmarks: 98
 
 loss: wing

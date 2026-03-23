@@ -25,7 +25,7 @@ class HRNetLandmarks(nn.Module):
         )
 
     def forward(self, x):
-        features = self.backbone.forward_features(x)
+        features = self.backbone(x)
         
         x0 = features[0]
         target_size = x0.shape[2:]

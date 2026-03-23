@@ -96,6 +96,6 @@ class WFLWRegressionDataset(Dataset):
 
         return {
             'image': cropped_img,                                         
-            'landmarks': torch.tensor(keypoint_flatten, dtype=torch.float32),
+            'keypoint_rel': torch.tensor(keypoint_flatten, dtype=torch.float32),
             'mask': torch.tensor(mask, dtype=torch.bool)
         }

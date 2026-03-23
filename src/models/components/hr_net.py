@@ -26,12 +26,12 @@ class HRNetLandmarks(nn.Module):
     def forward(self, x):
         stages = self.backbone(x)
         
-        branches = stages[-1]
+        x0, x1, x2, x3 = stages
 
-        if isinstance(branches, (list, tuple)):
-            x0, x1, x2, x3 = branches
+        if isinstance(stages, (list, tuple)):
+            x0, x1, x2, x3 = stages
         else:
-            raise ValueError(f"Backbone trả về Tensor {branches.shape}, Backbone thuc te la {type(self.backbone)}")
+            raise ValueError(f"Backbone trả về Tensor {stages.shape}, Backbone thuc te la {type(self.backbone)}")
         
         target_size = x0.shape[2:]
 

@@ -8,6 +8,6 @@ loss: wing
 
 nme_norm_factor: 90.509668
 
-compile: True
+compile: False
 
 num_landmarks: 98

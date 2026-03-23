@@ -11,7 +11,8 @@ class HRNetLandmarks(nn.Module):
             'hrnet_w18', 
             pretrained=pretrained, 
             features_only=True,
-            out_indices=(1, 2, 3, 4)
+            out_indices=(1, 2, 3, 4),
+            grad_checkpointing=True
         )
 
         feature_channels = self.backbone.feature_info.channels() 
@@ -48,6 +49,8 @@ class HRNetLandmarks(nn.Module):
         x3 = F.interpolate(x3, size=target_size, mode='bilinear', align_corners=False)
 
         combined_features = torch.cat([x0, x1, x2, x3], dim=1)
+
+        del stages, x0, x1, x2, x3
 
         heatmap = self.head(combined_features)
 

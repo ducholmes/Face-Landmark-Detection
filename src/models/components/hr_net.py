@@ -25,8 +25,13 @@ class HRNetLandmarks(nn.Module):
 
     def forward(self, x):
         features = self.backbone(x)
+        print(f"Type: {type(features)}, Length: {len(features)}")
+
+        if isinstance(features, (list, tuple)):
+            x0, x1, x2, x3 = features
+        else:
+            raise ValueError(f"Backbone trả về Tensor {features.shape}, không phải List 4 nhánh!")
         
-        x0 = features[0]
         target_size = x0.shape[2:]
 
         x1 = F.interpolate(features[1], size=target_size, mode='bilinear', align_corners=False)

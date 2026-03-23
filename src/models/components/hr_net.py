@@ -8,10 +8,10 @@ class HRNetLandmarks(nn.Module):
         super().__init__()
 
         self.backbone = timm.create_model(
-            model_name='hrnet_w18',
-            pretrained=pretrained,
-            num_classes=0,
-            global_pool=''
+            'hrnet_w18', 
+            pretrained=pretrained, 
+            features_only=True,
+            out_indices=(4,)
         )
 
         in_channels = 960
@@ -24,19 +24,20 @@ class HRNetLandmarks(nn.Module):
         )
 
     def forward(self, x):
-        features = self.backbone(x)
-        print(f"Type: {type(features)}, Length: {len(features)}")
+        stages = self.backbone(x)
+        
+        branches = stages[-1]
 
-        if isinstance(features, (list, tuple)):
-            x0, x1, x2, x3 = features
+        if isinstance(branches, (list, tuple)):
+            x0, x1, x2, x3 = branches
         else:
-            raise ValueError(f"Backbone trả về Tensor {features.shape}, không phải List 4 nhánh!")
+            raise ValueError(f"Backbone trả về Tensor {branches.shape}, không phải List 4 nhánh!")
         
         target_size = x0.shape[2:]
 
-        x1 = F.interpolate(features[1], size=target_size, mode='bilinear', align_corners=False)
-        x2 = F.interpolate(features[2], size=target_size, mode='bilinear', align_corners=False)
-        x3 = F.interpolate(features[3], size=target_size, mode='bilinear', align_corners=False)
+        x1 = F.interpolate(x1, size=target_size, mode='bilinear', align_corners=False)
+        x2 = F.interpolate(x2, size=target_size, mode='bilinear', align_corners=False)
+        x3 = F.interpolate(x3, size=target_size, mode='bilinear', align_corners=False)
 
         combined_features = torch.cat([x0, x1, x2, x3], dim=1)
 

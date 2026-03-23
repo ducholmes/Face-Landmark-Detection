@@ -92,10 +92,8 @@ class WFLWRegressionDataset(Dataset):
         keypoint_norm[:, 0] /= self.width
         keypoint_norm[:, 1] /= self.height
 
-        keypoint_flatten = keypoint_norm.flatten()
-
         return {
             'image': cropped_img,                                         
-            'keypoint_rel': torch.tensor(keypoint_flatten, dtype=torch.float32),
+            'keypoint_rel': torch.tensor(keypoint_norm, dtype=torch.float32),
             'mask': torch.tensor(mask, dtype=torch.bool)
         }

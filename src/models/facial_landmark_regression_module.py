@@ -101,6 +101,12 @@ class FacialLandmarkRegressionModule(LightningModule):
             mask = mask.view(-1, self.hparams.num_landmarks)
 
         pred = self.net(images)
+
+        if pred.dim()==2:
+            pred = pred.view(-1, self.hparams.num_landmarks, 2)  
+        if pred.dim()==1:
+            pred = pred.view(-1, self.hparams.num_landmarks)
+
         loss = self.criterion(pred, landmarks)
         nme  = self._compute_nme(pred, landmarks, mask)
         return loss, nme, pred

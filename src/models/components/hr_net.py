@@ -1,38 +1,46 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import timm
 
 class HRNetLandmarks(nn.Module):
     def __init__(self, num_landmarks=76, pretrained=True):
         super().__init__()
 
+        # Khởi tạo backbone hrnet_w18
         self.backbone = timm.create_model(
             model_name='hrnet_w18',
             pretrained=pretrained,
-            num_classes=0 
+            num_classes=0,
+            features_only=True # timm sẽ trả về list các features từ các stage
         )
 
-        in_channels = 18 
+        # Với HRNet-W18, số channel của 4 nhánh ở Stage 4 lần lượt là:
+        # Branch0: 18, Branch1: 36, Branch2: 72, Branch3: 144
+        # Tổng cộng = 18 + 36 + 72 + 144 = 270
+        in_channels = 270 
         
-        self.head = nn.Conv2d(
-            in_channels=in_channels, 
-            out_channels=num_landmarks,
-            kernel_size=1
+        # Head nhận vào 270 channels và nhả ra số landmarks tương ứng
+        self.head = nn.Sequential(
+            nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(in_channels),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(in_channels, num_landmarks, kernel_size=1)
         )
 
     def forward(self, x):
-        high_res_features = []
+        features = self.backbone.forward_features(x)
+        
+        x0 = features[0]
+        target_size = x0.shape[2:]
 
-        def hook(module, input, output):
-            high_res_features.append(output[0])
+        x1 = F.interpolate(features[1], size=target_size, mode='bilinear', align_corners=False)
+        x2 = F.interpolate(features[2], size=target_size, mode='bilinear', align_corners=False)
+        x3 = F.interpolate(features[3], size=target_size, mode='bilinear', align_corners=False)
 
-        handle = self.backbone.stage4.register_forward_hook(hook)
+        combined_features = torch.cat([x0, x1, x2, x3], dim=1)
 
-        _ = self.backbone(x)
-
-        handle.remove()
-
-        heatmap = self.head(high_res_features[0])
+        heatmap = self.head(combined_features)
 
         return heatmap
 

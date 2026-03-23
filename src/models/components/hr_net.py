@@ -11,7 +11,6 @@ class HRNetLandmarks(nn.Module):
             model_name='hrnet_w18',
             pretrained=pretrained,
             num_classes=0,
-            features_only=True,
             global_pool=''
         )
 

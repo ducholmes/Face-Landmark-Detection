@@ -14,7 +14,7 @@ class HRNetLandmarks(nn.Module):
             out_indices=(4,)
         )
 
-        in_channels = 960
+        in_channels = 270
         
         self.head = nn.Sequential(
             nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1, bias=False),

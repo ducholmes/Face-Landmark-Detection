@@ -17,11 +17,18 @@ class HRNetLandmarks(nn.Module):
         feature_channels = self.backbone.feature_info.channels() 
         in_channels = sum(feature_channels)
         
+        bottleneck_channels = 256 
+
         self.head = nn.Sequential(
-            nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(in_channels),
+            nn.Conv2d(total_channels, bottleneck_channels, kernel_size=1, bias=False),
+            nn.BatchNorm2d(bottleneck_channels),
             nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels, num_landmarks, kernel_size=1)
+            
+            nn.Conv2d(bottleneck_channels, bottleneck_channels, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(bottleneck_channels),
+            nn.ReLU(inplace=True),
+            
+            nn.Conv2d(bottleneck_channels, num_landmarks, kernel_size=1)
         )
 
     def forward(self, x):

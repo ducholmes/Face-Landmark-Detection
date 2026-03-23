@@ -7,20 +7,16 @@ class HRNetLandmarks(nn.Module):
     def __init__(self, num_landmarks=76, pretrained=True):
         super().__init__()
 
-        # Khởi tạo backbone hrnet_w18
         self.backbone = timm.create_model(
             model_name='hrnet_w18',
             pretrained=pretrained,
             num_classes=0,
-            features_only=True # timm sẽ trả về list các features từ các stage
+            features_only=True,
+            global_pool=''
         )
 
-        # Với HRNet-W18, số channel của 4 nhánh ở Stage 4 lần lượt là:
-        # Branch0: 18, Branch1: 36, Branch2: 72, Branch3: 144
-        # Tổng cộng = 18 + 36 + 72 + 144 = 270
         in_channels = 270 
         
-        # Head nhận vào 270 channels và nhả ra số landmarks tương ứng
         self.head = nn.Sequential(
             nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1, bias=False),
             nn.BatchNorm2d(in_channels),

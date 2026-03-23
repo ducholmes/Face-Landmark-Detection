@@ -34,23 +34,19 @@ class HRNetLandmarks(nn.Module):
 
     def forward(self, x):
         stages = self.backbone(x)
-        
-        x0, x1, x2, x3 = stages
 
         if isinstance(stages, (list, tuple)):
-            x0, x1, x2, x3 = stages
+            x0, x1 = stages
         else:
             raise ValueError(f"Backbone trả về Tensor {stages.shape}, Backbone thuc te la {type(self.backbone)}")
         
         target_size = x0.shape[2:]
 
         x1 = F.interpolate(x1, size=target_size, mode='bilinear', align_corners=False)
-        x2 = F.interpolate(x2, size=target_size, mode='bilinear', align_corners=False)
-        x3 = F.interpolate(x3, size=target_size, mode='bilinear', align_corners=False)
 
-        combined_features = torch.cat([x0, x1, x2, x3], dim=1)
+        combined_features = torch.cat([x0, x1], dim=1)
 
-        del stages, x0, x1, x2, x3
+        del stages, x0, x1
 
         heatmap = self.head(combined_features)
 

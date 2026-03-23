@@ -10,8 +10,8 @@ class HRNetLandmarks(nn.Module):
         self.backbone = timm.create_model(
             'hrnet_w18', 
             pretrained=pretrained, 
-            num_classes=0,
-            global_pool=''
+            features_only=True,
+            out_indices=(1, 2, 3, 4)
         )
 
         in_channels = 270

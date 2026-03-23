@@ -31,7 +31,7 @@ class HRNetLandmarks(nn.Module):
         if isinstance(branches, (list, tuple)):
             x0, x1, x2, x3 = branches
         else:
-            raise ValueError(f"Backbone trả về Tensor {branches.shape}, không phải List 4 nhánh!")
+            raise ValueError(f"Backbone trả về Tensor {branches.shape}, Backbone thuc te la {type(self.backbone)}")
         
         target_size = x0.shape[2:]
 

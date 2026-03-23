@@ -11,7 +11,7 @@ class HRNetLandmarks(nn.Module):
             'hrnet_w18', 
             pretrained=pretrained, 
             features_only=True,
-            out_indices=(1, 2, 3, 4),
+            out_indices=(1, 2),
             grad_checkpointing=True
         )
 

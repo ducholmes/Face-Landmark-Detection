@@ -13,8 +13,6 @@ import time
 from ultralytics import YOLO
 import streamlit as st
 
-from src.utils.one_euro_filter import OneEuroFilter
-
 # --- HẰNG SỐ CẤU HÌNH ---
 RESNET_ONNX_PATH = str(ROOT_PATH / "experiment" / "resnet18.onnx")
 INPUT_SIZE = (256, 256)

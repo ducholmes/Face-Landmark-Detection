@@ -5,8 +5,8 @@ from PIL import Image
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
-from src.models.facial_landmark_module import FacialLandmarkRegressionModule
-from src.models.components.hr_net import FaceLandmarkResNet
+from src.models.facial_landmark_regression_module import FacialLandmarkRegressionModule
+from src.models.components.resnet import FaceLandmarkResNet
 
 torch.serialization.add_safe_globals([FaceLandmarkResNet])
 

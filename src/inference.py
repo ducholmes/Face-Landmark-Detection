@@ -5,10 +5,10 @@ from PIL import Image
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
-from src.models.facial_landmark_module import FacialLandmarkModule
-from src.models.components.hr_net import HRNetLandmarks
+from src.models.facial_landmark_module import FacialLandmarkRegressionModule
+from src.models.components.hr_net import FaceLandmarkResNet
 
-torch.serialization.add_safe_globals([HRNetLandmarks])
+torch.serialization.add_safe_globals([FaceLandmarkResNet])
 
 def predict_and_draw(image_path, checkpoint_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -35,7 +35,7 @@ def predict_and_draw(image_path, checkpoint_path):
     state_dict = checkpoint["state_dict"]
     new_state_dict = {k.replace("_orig_mod.", ""): v for k, v in state_dict.items()}
     
-    model = FacialLandmarkModule(HRNetLandmarks(num_landmarks=98))
+    model = FacialLandmarkRegressionModule(FaceLandmarkResNet(num_landmarks=98))
     model.load_state_dict(new_state_dict)
     model.to(device)
     model.eval()
@@ -54,7 +54,7 @@ def predict_and_draw(image_path, checkpoint_path):
     plt.axis('on')
     plt.savefig('images/Niggaa_plot.png')
 
-TEST_IMAGE_PATH = "images/13_Interview_Interview_2_People_Visible_13_222.jpg" 
+TEST_IMAGE_PATH = "images/Nigga.png" 
 CKPT_PATH = "logs/train/last.ckpt"
 
 def decode_heatmaps(self, heatmaps):

@@ -1,0 +1,8 @@
+rootutils
+opencv-python
+huggingface-hub
+numpy
+onnxruntime
+ultralytics
+streamlit
+one-euro-filter
